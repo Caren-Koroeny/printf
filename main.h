@@ -1,14 +1,45 @@
-#ifndef MAIN_H
-#define MAIN_H
-#define NULL ((void *)0)
+#include "main.h"
 
-int _putchar(char c);
-int _print_str(char *string);
-int _print_int(long int var);
-int _printf(const char *format, ...);
-int to_Binary(unsigned int n);
-int to_Octal(unsigned int n);
-int _power_recursion(int x, int y);
-int to_Hexa(unsigned int num);
+/**
+ * _printf - printf function
+ * @format: const char pointer
+ * Return: b_len
+ */
 
-#endif
+int _printf(const char *format, ...)
+{
+	int (*pfunc)(va_list, flags_t *);
+	const char *p;
+	va_list arguments;
+	flags_t flags = {0, 0, 0};
+
+	register int count = 0;
+
+	va_start(arguments, format);
+	if (!format || (format[0] == '%' && !format[1]))
+		return (-1);
+	if (format[0] == '%' && format[1] == ' ' && !format[2])
+		return (-1);
+	for (p = format; *p; p++)
+	{
+		if (*p == '%')
+		{
+			p++;
+			if (*p == '%')
+			{
+				count += _putchar('%');
+				continue;
+			}
+			while (get_flag(*p, &flags))
+				p++;
+			pfunc = get_print(*p);
+			count += (pfunc)
+				? pfunc(arguments, &flags)
+				: _printf("%%%c", *p);
+		} else
+			count += _putchar(*p);
+	}
+	_putchar(-1);
+	va_end(arguments);
+	return (count);
+}
