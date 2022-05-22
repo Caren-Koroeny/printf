@@ -15,3 +15,4 @@ int print_chr(va_list arguments, char *buf, unsigned int ibuf)
 	handl_buf(buf, c, ibuf);
 
 	return (1);
+}
